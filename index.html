@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Importing 100% Cursive Elegant Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <title>Sagar & Rishi | Engagement</title>
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* Aesthetic Dark Background */
+        body { 
+            margin: 0; 
+            color: #D4AF37; 
+            font-family: 'Dancing Script', cursive; 
+            font-size: 1.3rem;
+            overflow-x: hidden; 
+            background: linear-gradient(rgba(5, 5, 5, 0.8), rgba(5, 5, 5, 0.9)), 
+                        url('https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=2000&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        h1, h2, h3 { font-family: 'Great Vibes', cursive; color: #E8C366; font-weight: normal; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin: 10px 0; }
+        h1 { font-size: 4rem; }
+        h2 { font-size: 3.5rem; }
+        h3 { font-size: 2.2rem; }
+
+        /* Glassmorphism Sections */
+        .glass-blob { 
+            background: rgba(10, 10, 10, 0.45); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            border: 1px solid rgba(212, 175, 55, 0.4); 
+            border-radius: 20px; 
+            padding: 35px 25px; 
+            margin: 20px 0; 
+            width: 100%; 
+            box-sizing: border-box; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        /* Sparkles */
+        #sparkle-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; pointer-events: none; z-index: 10001; }
+        .sparkle { position: absolute; width: 6px; height: 6px; background: #FFD700; border-radius: 50%; opacity: 0; box-shadow: 0 0 10px #FFD700; }
+        @keyframes fade { 0%, 100% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1.5); } }
+
+        /* Grand Doors */
+        #door-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 9999; display: flex; transition: visibility 2s; }
+        .door-panel { 
+            width: 50%; height: 100vh; 
+            background: linear-gradient(to right, #111, #222); 
+            position: relative; 
+            transition: transform 1.5s cubic-bezier(0.65, 0, 0.15, 1); 
+            border: 3px solid #D4AF37;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+        }
+        .door-left { border-right: 2px solid #F3E5AB; transform-origin: left; }
+        .door-right { border-left: 2px solid #F3E5AB; transform-origin: right; }
+        
+        .door-panel::after {
+            content: ''; position: absolute; top: 5%; bottom: 5%; left: 5%; right: 5%;
+            border: 1px dashed #D4AF37; opacity: 0.5; pointer-events: none;
+        }
+        .door-handle { position: absolute; top: 50%; transform: translateY(-50%); width: 15px; height: 90px; background: linear-gradient(to bottom, #F3E5AB, #D4AF37, #8B6508); border-radius: 10px; box-shadow: 4px 4px 10px rgba(0,0,0,0.8); }
+        .door-left .door-handle { right: 25px; }
+        .door-right .door-handle { left: 25px; }
+
+        .door-open .door-left { transform: translateX(-100%); }
+        .door-open .door-right { transform: translateX(100%); }
+        
+        #door-btn { 
+            position: absolute; z-index: 10000; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            width: 140px; height: 140px; background: radial-gradient(circle, #F3E5AB, #D4AF37, #8B6508); 
+            border: 3px solid #FFF; border-radius: 50%; cursor: pointer; 
+            font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: #111; 
+            box-shadow: 0 0 25px #D4AF37; transition: all 0.4s ease;
+        }
+        #door-btn:hover { transform: translate(-50%, -50%) scale(1.08); box-shadow: 0 0 35px #FFDF73; }
+        .fade-out { opacity: 0; pointer-events: none; }
+
+        /* Scratch Card Area */
+        .scratch-wrapper { 
+            position: relative; width: 180px; height: 160px; margin: 20px auto; 
+            clip-path: path('M90,150 C10,90 0,60 0,40 C0,15 25,0 50,0 C70,0 90,15 90,30 C90,15 110,0 130,0 C155,0 180,15 180,40 C180,60 170,90 90,150'); 
+            background: rgba(10, 10, 10, 0.9); 
+            border: 1px solid #D4AF37;
+        }
+        
+        /* Date Layer (Behind) */
+        .scratch-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1; padding-bottom: 10px; }
+        .scratch-content span { font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: #F3E5AB; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        
+        /* Canvas Layer (Middle) */
+        #scratchCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; touch-action: none; cursor: crosshair; }
+
+        /* HTML Text Layer (On Top - Solves iOS Font Bug) */
+        .scratch-text-overlay {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: #111111; font-weight: bold;
+            z-index: 3; pointer-events: none; user-select: none; transition: opacity 0.4s ease;
+        }
+
+        /* General Layout */
+        .container { max-width: 500px; margin: 0 auto; padding: 40px 25px; padding-bottom: 80px; }
+        .section { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .slide-up { opacity: 0; transform: translateY(40px); transition: all 1.2s ease-out; }
+        .slide-up.active { opacity: 1; transform: translateY(0); }
+        
+        /* Images */
+        .portrait { width: 180px; height: 180px; border-radius: 50%; border: 3px solid #D4AF37; margin-bottom: 20px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.6); }
+        .bottom-portrait { width: 100%; max-width: 320px; border-radius: 15px; border: 2px solid #D4AF37; margin-top: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.6); object-fit: cover; }
+        
+        /* Countdown */
+        #countdown span { display: inline-block; min-width: 45px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 8px; border: 1px solid #D4AF37; }
+
+        /* Mixed Cursive Styling */
+        .mixed-cursive { line-height: 1.4; margin: 0; }
+        .mc-line1 { font-family: 'Dancing Script', cursive; font-size: 1.6rem; font-weight: 400; color: #D4AF37; }
+        .mc-line2 { font-family: 'Great Vibes', cursive; font-size: 3.2rem; color: #E8C366; display: block; margin: 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+        .mc-line3 { font-family: 'Dancing Script', cursive; font-size: 2rem; font-weight: 700; color: #F3E5AB; }
+
+        /* Maker Credit */
+        .maker-credit {
+            position: fixed;
+            bottom: 12px;
+            right: 15px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 0.65rem;
+            color: rgba(212, 175, 55, 0.6);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            z-index: 1000;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sparkles and Doors -->
+    <div id="sparkle-container"></div>
+    <div id="door-overlay">
+        <div class="door-panel door-left"><div class="door-handle"></div></div>
+        <div class="door-panel door-right"><div class="door-handle"></div></div>
+        <button id="door-btn">Open</button>
+    </div>
+
+    <!-- Content -->
+    <div class="container">
+        
+        <!-- Page 1 -->
+        <div class="section slide-up active">
+            <div class="glass-blob">
+                <img src="https://images.unsplash.com/photo-1588814096146-e7c56156f9f8?w=500&auto=format&fit=crop&q=60" class="portrait" alt="Sagar & Rishi">
+                <h1>Sagar & Rishi</h1>
+                <p>"Two hearts, one beautiful journey."</p>
+            </div>
+        </div>
+        
+        <!-- Page 2 -->
+        <div class="section slide-up">
+            <div class="glass-blob">
+                <h2>Mark Your Calendar</h2>
+                <p style="font-size: 1.4rem; margin-top: 0; margin-bottom: 20px;">You're Invited</p>
+                
+                <div class="scratch-wrapper">
+                    <!-- Date Hidden Underneath -->
+                    <div class="scratch-content">
+                        <span>July 24, 2026</span>
+                    </div>
+                    <!-- Golden Scratch Overlay -->
+                    <canvas id="scratchCanvas"></canvas>
+                    <!-- Floating Cursive Instruction -->
+                    <div class="scratch-text-overlay" id="scratchLabel">Scratch here</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 3 -->
+        <div class="section slide-up">
+            <div class="glass-blob">
+                <h3>Counting down till forever</h3>
+                <div id="countdown" style="font-size: 1.8rem; color: #F3E5AB; margin: 25px 0;">
+                    <span id="days">0</span>d : <span id="hours">0</span>h : <span id="minutes">0</span>m : <span id="seconds">0</span>s
+                </div>
+                <h2>The Venue</h2>
+                <p>Mangalam Banquets<br>Jolly Mahal, Topsia, Kolkata<br>12:00 PM</p>
+                <p>"Together is a beautiful place to be."</p>
+            </div>
+        </div>
+
+        <!-- Page 4: New Photo & Mixed Cursive Section -->
+        <div class="section slide-up">
+            <div class="glass-blob">
+                <p class="mixed-cursive">
+                    <span class="mc-line1">we invite you</span><br>
+                    <span class="mc-line2">to celebrate</span>
+                    <span class="mc-line3">their engagement</span>
+                </p>
+                <!-- REPLACE THE LINK BELOW WITH YOUR OWN PHOTO URL -->
+                <img src="https://Adobe Express - file (1).png" class="bottom-portrait" alt="Engagement Celebration">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Made By Credit -->
+    <div class="maker-credit">Made by Pratyaksh</div>
+
+    <script>
+        // Door logic and Sparkles
+        const btn = document.getElementById('door-btn');
+        const overlay = document.getElementById('door-overlay');
+        const sparkleCont = document.getElementById('sparkle-container');
+
+        btn.addEventListener('click', () => {
+            btn.classList.add('fade-out');
+            overlay.classList.add('door-open');
+            
+            setTimeout(() => {
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.3 }, colors: ['#D4AF37', '#F3E5AB', '#ffffff'] });
+            }, 600);
+
+            for (let i = 0; i < 40; i++) {
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                s.style.left = Math.random() * 100 + '%'; 
+                s.style.top = Math.random() * 100 + '%';
+                s.style.animation = `fade ${Math.random() * 1 + 0.5}s infinite`;
+                sparkleCont.appendChild(s);
+            }
+            setTimeout(() => { 
+                overlay.style.display = 'none'; 
+                sparkleCont.innerHTML = ''; 
+            }, 2500);
+        });
+
+        // Scratch Logic 
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        const scratchLabel = document.getElementById('scratchLabel');
+        canvas.width = 180; canvas.height = 160;
+        
+        ctx.fillStyle = '#D4AF37'; // Pure Gold Background Layer
+        ctx.fillRect(0, 0, 180, 160);
+        
+        function scratch(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath(); 
+            ctx.arc(x, y, 22, 0, Math.PI*2); 
+            ctx.fill();
+            
+            // Instantly hide the overlay text the second they start scratching
+            scratchLabel.style.opacity = '0';
+        }
+        canvas.addEventListener('mousemove', scratch);
+        canvas.addEventListener('touchmove', scratch, {passive: false});
+
+        // Countdown Timer Logic
+        function update() {
+            const diff = new Date("July 24, 2026 00:00:00").getTime() - new Date().getTime();
+            document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000);
+        }
+        setInterval(update, 1000); 
+        update();
+
+        // Scroll Animation Logic
+        const observer = new IntersectionObserver((entries) => { 
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); }); 
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.slide-up').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
