@@ -102,13 +102,38 @@
         }
 
         /* General Layout */
-        .container { max-width: 500px; margin: 0 auto; padding: 40px 25px; }
+        .container { max-width: 500px; margin: 0 auto; padding: 40px 25px; padding-bottom: 80px; }
         .section { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         .slide-up { opacity: 0; transform: translateY(40px); transition: all 1.2s ease-out; }
         .slide-up.active { opacity: 1; transform: translateY(0); }
-        .portrait { width: 180px; height: 180px; border-radius: 50%; border: 3px solid #D4AF37; margin-bottom: 20px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.6); }
         
+        /* Images */
+        .portrait { width: 180px; height: 180px; border-radius: 50%; border: 3px solid #D4AF37; margin-bottom: 20px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.6); }
+        .bottom-portrait { width: 100%; max-width: 320px; border-radius: 15px; border: 2px solid #D4AF37; margin-top: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.6); object-fit: cover; }
+        
+        /* Countdown */
         #countdown span { display: inline-block; min-width: 45px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 8px; border: 1px solid #D4AF37; }
+
+        /* Mixed Cursive Styling */
+        .mixed-cursive { line-height: 1.4; margin: 0; }
+        .mc-line1 { font-family: 'Dancing Script', cursive; font-size: 1.6rem; font-weight: 400; color: #D4AF37; }
+        .mc-line2 { font-family: 'Great Vibes', cursive; font-size: 3.2rem; color: #E8C366; display: block; margin: 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+        .mc-line3 { font-family: 'Dancing Script', cursive; font-size: 2rem; font-weight: 700; color: #F3E5AB; }
+
+        /* Maker Credit */
+        .maker-credit {
+            position: fixed;
+            bottom: 12px;
+            right: 15px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 0.65rem;
+            color: rgba(212, 175, 55, 0.6);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            z-index: 1000;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -128,8 +153,7 @@
         <div class="section slide-up active">
             <div class="glass-blob">
                 <img src="https://images.unsplash.com/photo-1588814096146-e7c56156f9f8?w=500&auto=format&fit=crop&q=60" class="portrait" alt="Sagar & Rishi">
-                <h1>Raja & Rani</h1>
-                <h4>WE'RE GETTING ENGAGED!</h4>
+                <h1>Sagar & Rishi</h1>
                 <p>"Two hearts, one beautiful journey."</p>
             </div>
         </div>
@@ -137,7 +161,6 @@
         <!-- Page 2 -->
         <div class="section slide-up">
             <div class="glass-blob">
-                <!-- Main Header Styled Cursive -->
                 <h2>Mark Your Calendar</h2>
                 <p style="font-size: 1.4rem; margin-top: 0; margin-bottom: 20px;">You're Invited</p>
                 
@@ -149,8 +172,7 @@
                     <!-- Golden Scratch Overlay -->
                     <canvas id="scratchCanvas"></canvas>
                     <!-- Floating Cursive Instruction -->
-                    <div class="scratch-text-overlay" id="scratchLabel">Scratch here>
-                        
+                    <div class="scratch-text-overlay" id="scratchLabel">Scratch here</div>
                 </div>
             </div>
         </div>
@@ -167,7 +189,24 @@
                 <p>"Together is a beautiful place to be."</p>
             </div>
         </div>
+
+        <!-- Page 4: New Photo & Mixed Cursive Section -->
+        <div class="section slide-up">
+            <div class="glass-blob">
+                <p class="mixed-cursive">
+                    <span class="mc-line1">we invite you</span><br>
+                    <span class="mc-line2">to celebrate</span>
+                    <span class="mc-line3">their engagement</span>
+                </p>
+                <!-- REPLACE THE LINK BELOW WITH YOUR OWN PHOTO URL -->
+                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500&auto=format&fit=crop&q=60" class="bottom-portrait" alt="Engagement Celebration">
+            </div>
+        </div>
+
     </div>
+
+    <!-- Made By Credit -->
+    <div class="maker-credit">Made by Pratyaksh</div>
 
     <script>
         // Door logic and Sparkles
